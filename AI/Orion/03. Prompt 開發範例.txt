@@ -1,0 +1,76 @@
+針對 Orion (OpenAI) 的強大推理與結構化輸出能力，以下提供一個實際的開發案例。
+假設我們要開發一個「智能合約邏輯審查工具」，這類任務需要極高的邏輯嚴密性，正是 Orion 的強項。
+1. Prompt 開發範例 (JSON 規格化)
+這是一個符合 2026 年最佳實踐的 Prompt 結構：
+-----------------------------------------------------------------------------------------------
+markdown
+# 角色
+你是一位資深的區塊鏈安全審計師，專精於 Solidity 與智能合約邏輯分析。
+
+# 任務
+分析使用者提供的智能合約程式碼，識別潛在的邏輯漏洞（如重入攻擊、整數溢出或權限控制問題）。
+
+# 流程
+1. 逐步分析合約的每一個函數邏輯。
+2. 評估狀態變數的更動是否安全。
+3. 根據漏洞嚴重程度（高/中/低）進行分類。
+
+# 限制與格式
+- 必須以 JSON 格式輸出。
+- 嚴禁提供模糊的建議，必須指出具體的程式碼行號。
+- 語言：繁體中文。
+
+# 輸出 JSON Schema
+{
+  "audit_report": {
+    "summary": "總結",
+    "vulnerabilities": [
+      {
+        "severity": "等級",
+        "location": "行號/函數名",
+        "description": "漏洞描述",
+        "fix_suggestion": "修復建議"
+      }
+    ]
+  }
+}
+----------------------------------------------------------------------
+2. Python 程式碼實作
+在 2026 年，開發者通常會使用 OpenAI 的 Structured Outputs 功能來確保 Orion 100% 遵循 JSON 格式。
+
+<code>python</code>
+
+import openai
+import json
+
+client = openai.OpenAI()
+
+# 模擬一段有漏洞的合約程式碼
+contract_code = """
+function withdraw(uint _amount) public {
+    require(balances[msg.sender] >= _amount);
+    (bool success, ) = msg.sender.call{value: _amount}("");
+    require(success);
+    balances[msg.sender] -= _amount;
+}
+"""
+
+response = client.chat.completions.create(
+    model="orion-preview", # 2026 最新模型代號
+    messages=[
+        {"role": "system", "content": "你是一位資深審計師，請依照指定的 JSON 格式輸出審計結果。"},
+        {"role": "user", "content": f"請審計以下代碼：\n{contract_code}"}
+    ],
+    response_format={ "type": "json_object" } # 強制 JSON 輸出
+)
+
+# 解析結果
+result = json.loads(response.choices[0].message.content)
+print(json.dumps(result, indent=2, ensure_ascii=False))
+
+3. 為何這個案例適合 Orion？
+邏輯深度：一般的模型可能只會說「這段代碼有重入攻擊風險」。Orion 則會精確推演出：因為 call 發生在 balances 更新之前，攻擊者可以重複觸發 withdraw。
+指令遵循：在處理企業級應用時，最怕 AI 輸出多餘的廢話（例如「好的，這是我為您準備的報告...」）。Orion 在 JSON 格式的嚴格度上表現極佳，適合自動化開發流程。
+零樣本能力：Orion 對於像 Solidity、Rust、Go 等程式語言的底層邏輯有更深的理解，開發者不需要提供大量範例（Few-shot），只要給出清晰的指令即可獲得高品質結果。
+您可以直接在 OpenAI Playground 貼上上述 Prompt 測試其推理效果。
+OpenAI Playground URL : https://platform.openai.com/playground
