@@ -8,3 +8,9 @@ Ollama 整合容易，適合開發者用來做原型開發、嵌入自家應用�
 
 
 URL : https://www.cg.com.tw/Ollama/
+https://www.pongo.com.tw/what-is-ollama-local-llm-deployment-guide/
+
+Ollama 是一套能讓使用者在本地端輕鬆執行大型語言模型的工具。你不需要設定繁雜的 CUDA、PyTorch 或環境依賴，
+只要一條指令即可載入並使用 LLM，例如 Llama 3、Qwen、Mistral、Phi 3、Gemma 等主流模型。
+
+這篇文章將以清楚的 SEO 結構介紹 Ollama 的特色、安裝方式、使用方法、適合的模型選擇，以及實際應用場景。
