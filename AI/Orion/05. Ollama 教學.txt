@@ -1,0 +1,10 @@
+Ollama 教學
+Author: Kelvin Huang
+Ollama 是一個可以在本機端運行 LLM 大型語言模型的免費開源工具，讓您無需連上網路也能使用類似 ChatGPT AI 服務。
+
+Ollama 安裝簡單，通常只要一行指令就可以啟動模型。由於 Ollama 在本地運行，比較不會有資訊安全的問題，並且無需支付 AI 平台的訂閱費用。
+Ollama 整合容易，適合開發者用來做原型開發、嵌入自家應用程式。本教學也將展示使用 Python 撰寫程式串接 Ollama 開發 AI 相關的應用。
+更多資訊參考 https://ollama.com/library 網頁
+
+
+URL : https://www.cg.com.tw/Ollama/
