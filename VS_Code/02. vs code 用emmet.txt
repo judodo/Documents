@@ -1,0 +1,3 @@
+vs code有內建emmet
+
+只要在網頁上面按 ! 鍵，然後再按 tab,  就會自動產生html
