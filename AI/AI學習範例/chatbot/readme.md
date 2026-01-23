@@ -24,6 +24,7 @@
 git clone [https://github.com/你的帳號/my_ai_chatbot.git](https://github.com/你的帳號/my_ai_chatbot.git)
 cd my_ai_chatbot
 pip install -U google-genai python-dotenv
+```  &lt;-- 務必檢查這三點是否存在
 
 ### 2. 設定環境變數
 
