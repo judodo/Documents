@@ -1,0 +1,72 @@
+  File "D:\sourceCode\08_AI\my_ai_chatbot\main_record.py", line 56, in <module>
+    start_chat()
+    ~~~~~~~~~~^^
+  File "D:\sourceCode\08_AI\my_ai_chatbot\main_record.py", line 25, in start_chat
+    saved_history = load_history()
+  File "D:\sourceCode\08_AI\my_ai_chatbot\main_record.py", line 15, in load_history
+    return json.load(f)
+           ~~~~~~~~~^^^
+  File "C:\Python314\Lib\json\__init__.py", line 298, in load
+    return loads(fp.read(),
+        cls=cls, object_hook=object_hook,
+        parse_float=parse_float, parse_int=parse_int,
+        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "C:\Python314\Lib\json\__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Python314\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+
+
+
+這個錯誤 json.decoder.JSONDecodeError 代表你的 chat_history.json 檔案雖然存在，但內容是空的或者是損壞的。
+
+當 json.load() 遇到一個完全沒有內容（連 {} 或 [] 都沒有）的檔案時，就會噴出 Expecting value: line 1 column 1。這通常發生在你手動建立了檔案但沒寫入任何東西，或是程式第一次執行時意外建立了空檔案。
+🛠️ 快速修復方案
+
+請修改你的 load_history 函式，增加一個判斷：如果檔案是空的，就回傳空清單，而不是嘗試解析它。
+
+將 load_history 修改如下：
+Python
+
+def load_history():
+    """從檔案讀取歷史紀錄，增加錯誤檢查"""
+    if os.path.exists(HISTORY_FILE):
+        try:
+            # 檢查檔案大小，如果大於 0 才讀取
+            if os.path.getsize(HISTORY_FILE) > 0:
+                with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        except json.JSONDecodeError:
+            print("⚠️ 警告：歷史紀錄檔案損壞，將重啟對話。")
+            return []
+    return []
+
+💡 為什麼會這樣？（流程圖解）
+
+這在開發「檔案讀寫」功能時非常常見。你的程式在執行時會經過這幾個階段：
+
+    檢查檔案是否存在：你的檔案 chat_history.json 存在，所以通過了 os.path.exists。
+
+    嘗試解析內容：因為檔案裡面什麼都沒有（0 位元組），json.load 找不到任何數據可以轉換成 Python 物件。
+
+    拋出異常：這就是你看到的 JSONDecodeError。
+
+最簡單的自救方法
+
+如果你不想改程式碼，也有一個「手動」的解決辦法：
+
+    打開你的 chat_history.json。
+
+    在裡面輸入兩個中括號 [] 並存檔。
+
+    重新執行 main_record.py。
+
+接下來的建議
+
+既然你已經開始處理資料持久化 (Data Persistence)，下一步通常會遇到「檔案內容越來越大」的問題。目前的做法是每次對話都重寫整個檔案，對於小聊天還可以，但如果對話達到幾千條，效能會變差。
