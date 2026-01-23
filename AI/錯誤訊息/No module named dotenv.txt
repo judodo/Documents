@@ -2,3 +2,30 @@ Traceback (most recent call last):
   File "D:\sourceCode\08_AI\my_ai_chatbot\main.py", line 2, in <module>
     from dotenv import load_dotenv
 ModuleNotFoundError: No module named 'dotenv'
+
+這個錯誤訊息 ModuleNotFoundError: No module named 'dotenv' 代表你的 Python 環境中還沒有安裝處理 .env 檔案的套件。
+
+在 Python 中，雖然我們在程式碼裡寫 from dotenv import ...，但實際上要安裝的套件名稱是 python-dotenv。
+解決方法
+
+請打開終端機（Terminal/CMD），確認你在專案資料夾下，執行以下指令：
+Bash
+
+pip install python-dotenv
+
+補充：為什麼會發生這個錯誤？
+
+當你看到 ModuleNotFoundError 時，通常是因為以下兩個原因之一：
+
+    尚未安裝套件：就像現在這樣，執行 pip install 即可解決。
+
+    安裝到了不同的 Python 環境：如果你電腦裡裝了多個版本的 Python（例如 Python 3.12 和 3.14），或者是使用了虛擬環境（venv），你需要確保你安裝套件的地方和你執行程式的地方是同一個。
+
+檢查方式： 如果你安裝後還是報錯，請嘗試使用這個更精確的安裝指令：
+Bash
+
+python -m pip install python-dotenv
+
+接下來的檢查清單
+
+安裝完後，再次執行 python main.py。如果一切正常，你應該會看到： === Gemini AI 助手已上線 (輸入 'exit' 或 'quit' 結束) ===
