@@ -1,0 +1,44 @@
+在 Slidev 中，將 Markdown 轉換成傳統的 PPTX 檔案需要透過一個小工具來協助。以下是標準的操作流程：
+1. 安裝必要工具
+
+Slidev 使用 headless 瀏覽器（Playwright）來捕捉頁面並轉換格式。請在你的專案資料夾內打開終端機，執行以下指令：
+Bash
+
+npm i -D playwright-chromium
+
+2. 執行匯出指令
+
+安裝完成後，輸入以下指令來產生 PPTX 檔案：
+Bash
+
+npx slidev export --format pptx
+
+    執行後： 系統會自動啟動後台瀏覽器，將每一頁渲染成圖片並嵌入到 PowerPoint 中。
+
+    檔案位置： 轉換完成後，你會在專案根目錄看到一個名為 slides-export.pptx 的檔案。
+
+3. 進階選項（可選）
+
+如果你想自訂匯出檔案的名稱或是包含可點擊的連結，可以使用這些參數：
+
+    自訂檔名： npx slidev export --format pptx --output my_presentation
+
+    同時匯出 PDF (最穩定)： 如果你擔心 PPT 在不同電腦跑版，通常會建議也匯出一份 PDF： npx slidev export
+
+⚠️ 重要提醒：編輯權限問題
+
+由於 Slidev 的本質是「網頁渲染」，匯出成 PPTX 時，它實際上是將每一頁渲染成一張高品質圖片放入投影片中。
+
+    優點： 絕對不會跑版，你在 Slidev 看到的字體、CSS 樣式、程式碼高亮，在 PPT 裡會完全一模一樣。
+
+    缺點： 你無法在 PowerPoint 軟體裡面直接「編輯」投影片上的文字。如果需要修改文字，你必須回到 slides.md 修改後重新執行匯出指令。
+
+4. 如果你需要「可編輯文字」的 PPT
+
+如果你一定要在 PowerPoint 裡編輯文字，Slidev 可能不是最佳選擇。建議改用以下流程：
+
+    將你的 Markdown 內容丟給 Pandoc（一個文件轉換工具）。
+
+    或者直接使用我之前提到的 MindShow，將 Markdown 貼進去後，它支援匯出成「文字可編輯」的 PPT 格式。
+
+你的 slides.md 內容已經準備好了嗎？ 如果在執行匯出指令時遇到任何紅字報錯，請把錯誤碼貼給我，我幫你排解！
