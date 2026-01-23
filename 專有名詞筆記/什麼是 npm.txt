@@ -1,0 +1,18 @@
+npm（全稱為 Node Package Manager）是 JavaScript 程式語言中最主流的套件管理工具，也是全球最大的開源軟體倉庫之一。 
+根據 2026 年的技術現狀，npm 的核心定義與功能如下：
+
+1. 核心角色
+套件管理工具：它是一個隨附於 Node.js 的命令列工具（CLI），讓開發者能透過簡單的指令（如 npm install）安裝、共享、分發及管理專案所需的第三方套件與相依性。
+線上套件庫 (Registry)：這是一個巨大的資料庫，託管了數百萬個開源套件（如 React, Vue, Express 等），供開發者免費下載使用。 
+
+2. 關鍵功能
+相依性管理：透過 package.json 檔案，npm 可以自動記錄專案所依賴的所有工具版本，確保不同團隊成員在開發時能擁有一致的環境。
+腳本執行 (npm scripts)：開發者可以定義自定義指令（如 npm run dev 或 npm start）來自動化執行建置、測試或啟動伺服器等任務。 
+
+3. 2026 年的技術背景
+安全強化：2026 年初，npm 持續應對日益複雜的供應鏈攻擊。因應 2025 年底發生的多起重大攻擊事件，目前的 npm 系統強化了對異常代碼注入的掃描與驗證機制。
+Node.js 版本更迭：隨著 Node.js 的更新（如 GitHub Actions 預計於 2026 年全面改用 Node 24），npm 亦持續優化其執行效能與對最新 JavaScript 標準的支持。
+競爭與共生：儘管面臨 pnpm 或 Yarn 等高效能工具的競爭，npm 仍因其作為官方預設工具的地位，保持著全球最廣泛的使用率。 
+注意：在台灣，「NPM」也常指代 國立故宮博物院 (National Palace Museum)；
+而在美國，「NPM」則可能指 全國牧靈音樂家協會 (National Association of Pastoral Musicians)，
+該組織預計於 2026 年 7 月舉辦其 50 週年大會。若您是在開發程式，指的通常是前者（Node Package Manager）。 
