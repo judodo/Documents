@@ -24,20 +24,20 @@
 git clone [https://github.com/你的帳號/my_ai_chatbot.git](https://github.com/你的帳號/my_ai_chatbot.git)
 cd my_ai_chatbot
 pip install -U google-genai python-dotenv
-```  &lt;-- 務必檢查這三點是否存在
+```
 
 ### 2. 設定環境變數
 
 在專案根目錄建立 .env 檔案，內容如下：
 ```bash
 GOOGLE_API_KEY=你的_GEMINI_API_KEY
-
+```
 ## 2. 執行程式
 
 直接執行主程式即可進入對話模式：
 ```bash
 python main_record.py
-
+```
 
 ## 3.核心程式碼解析
 自動摘要邏輯
@@ -49,6 +49,7 @@ def summarize_history(chat_history):
     prompt = "請將以下對話紀錄縮減為 200 字以內的摘要..."
     # ... 呼叫 API 進行摘要 ...
     return response.text
+```
 
 ### 4.安全存檔機制
 
@@ -63,7 +64,7 @@ def save_history(chat_history):
         parts = [{"text": p.text} for p in content.parts if hasattr(p, 'text')]
         serializable_history.append({"role": role, "parts": parts})
     # ... 寫入檔案 ...
-
+```
 
 常見問題解決 (Troubleshooting)
 
