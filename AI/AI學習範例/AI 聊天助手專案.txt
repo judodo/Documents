@@ -1,0 +1,80 @@
+既然連線已經成功，我們就來動手做一個專業的 AI 聊天助手專案。這個專案會包含「歷史對話記憶」功能，並使用標準的專案結構，讓你的程式碼更整潔、更安全。
+1. 建立專案資料夾結構
+
+建議在你的電腦裡建立一個新的資料夾，結構如下：
+Plaintext
+
+my_ai_chatbot/
+├── .env                # 存放你的 API Key (不要上傳到 GitHub)
+├── main.py             # 主程式碼
+└── requirements.txt    # 記錄需要安裝的套件
+
+2. 環境設定與安裝
+
+首先，我們需要安裝 python-dotenv 來管理你的金鑰。在終端機執行：
+Bash
+
+pip install -U google-genai python-dotenv
+
+在 .env 檔案中寫入：
+Plaintext
+
+GOOGLE_API_KEY=你的_API_KEY_貼在這裡
+
+3. 完整專案程式碼 (main.py)
+
+這段程式碼使用了 client.chats.create()，它會自動幫你管理對話狀態，讓 AI 記得你上一句說了什麼。
+Python
+
+import os
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+# 1. 載入環境變數
+load_dotenv()
+api_key = os.getenv("GOOGLE_API_KEY")
+
+# 2. 初始化 Client
+client = genai.Client(api_key=api_key)
+
+def start_chat():
+    # 建立一個具有記憶的聊天工作階段
+    # 可以自定義 System Instruction 讓 AI 更有個性
+    chat = client.chats.create(
+        model="gemini-2.5-flash",
+        config=types.GenerateContentConfig(
+            system_instruction="你是一個友好的 AI 助手，請用繁體中文回答所有問題。",
+            temperature=0.7,
+        )
+    )
+
+    print("=== Gemini AI 助手已上線 (輸入 'exit' 或 'quit' 結束) ===")
+
+    while True:
+        # 獲取使用者輸入
+        user_input = input("你: ")
+        
+        if user_input.lower() in ["exit", "quit", "離開", "掰掰"]:
+            print("AI: 再見！有需要隨時找我。")
+            break
+
+        try:
+            # 發送訊息並獲取回覆 (Chat Session 會自動帶上歷史記錄)
+            response = chat.send_message(user_input)
+            print(f"AI: {response.text}")
+            print("-" * 30)
+            
+        except Exception as e:
+            print(f"❌ 發生錯誤: {e}")
+
+if __name__ == "__main__":
+    start_chat()
+
+4. 為什麼這個專案結構比較好？
+
+    記憶功能：普通的 generate_content 是獨立呼叫，而 chat.send_message 會把對話歷史包裝在一起傳給 Google，實現真正的「聊天」體驗。
+
+    安全性 (dotenv)：你的 API Key 存在 .env。未來如果你要把程式上傳到 GitHub，只要在 .gitignore 加入 .env，別人就看不到你的金鑰。
+
+    系統指令 (System Instruction)：你可以定義 AI 的行為（例如：你是一個專業的英文老師、你是一個只會講冷笑話的機器人）。
