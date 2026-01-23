@@ -1,0 +1,31 @@
+在 2026 年的雲端原生開發環境中，Container Image Hub（容器映像檔倉庫，通常稱為 Registry）已成為開發流程的核心。
+根據您的管理需求與使用場景，主要可以分為以下四大類：
+
+1. 公共開源社群集散地 (Public Hubs)
+這類平台存放了大量的開源基礎映像檔（如 Python, Node.js, Ubuntu），是全球開發者最常用的來源。
+Docker Hub：全球最大的公共倉庫。雖然面臨競爭，但仍是官方映像檔（Official Images）的首選發布地 [1, 5]。
+GitHub Container Registry (GHCR)：整合在 GitHub 生態系中，優點是與原始碼倉庫（Repo）綁定，非常適合開源專案使用。
+Quay.io：由 Red Hat 營運，強調掃描與安全性，是許多 Linux 與 Kubernetes 用戶的首選。
+
+2. 雲端供應商託管服務 (Cloud Managed Registries)
+如果您使用特定的雲端平台，使用其原生 Registry 能獲得最佳的下載速度、內網頻寬優勢及身分驗證整合。
+Amazon ECR (Elastic Container Registry)：AWS 用戶首選，與其權限管理系統 (IAM) 完美整合。
+Google Artifact Registry：Google Cloud (GCP) 的服務，已取代舊有的 GCR，支援容器以外的多種軟體包格式。
+Azure Container Registry (ACR)：微軟 Azure 的企業級服務，支援跨地區複製與映像檔簽署。
+
+3. 企業級私有倉庫軟體 (Private & Enterprise Solutions)
+如果您需要將映像檔儲存在自家伺服器（On-premise）或受控環境中，這類軟體最符合「分類即管理」的需求。
+Harbor：由 VMware 捐贈給 CNCF 的開源項目，是目前最受歡迎的私有倉庫解決方案。它支援多租戶管理、映像檔簽署（Notary）與自動弱點掃描，非常適合企業內部分類管理 [1, 5]。
+Sonatype Nexus Repository：如前所述，它不僅能存 Python (PyPI) 或 Java 套件，也能架設專屬的 Docker Registry，實現一站式分類管理。
+JFrog Artifactory：全球領先的萬用倉庫軟體，支援超過 30 種軟體包類型，極其強大但通常需要付費。
+
+4. AI 與大模型專用倉庫 (AI-Specific Hubs)
+隨著 2026 年生成式 AI 的普及，專門存放包含模型權重（Weights）的大型映像檔平台也成為主流。
+Hugging Face Hub：雖然主要存放模型，但其 Spaces 與模型映像檔功能已成為 AI 開發者的標準。
+NVIDIA NGC (NVIDIA GPU Cloud)：專門存放針對 NVIDIA GPU 優化過的 AI 與深度學習映像檔。
+
+總結建議：如何選擇？
+追求便利、與代碼同步：選擇 GitHub Container Registry。
+企業內網、強調安全性與掃描：首選 Harbor 或 Nexus。
+追求效能與雲端自動化：選擇 AWS ECR 或 Google Artifact Registry。
+存放 AI/機器學習模型：使用 Hugging Face 或 NVIDIA NGC。
