@@ -1,0 +1,70 @@
+from google import genai
+from google.genai import errors 
+
+這兩行程式碼是使用 Google 最新推出的 Gemini API Python SDK（通常稱為 google-genai 庫）的標準開頭。
+
+我們可以把它拆解成「功能主體」與「錯誤處理」兩個部分來理解：
+1. from google import genai
+
+這行是為了引入「核心功能」。
+
+    google: 這是頂層的命名空間（Namespace）。
+
+    genai: 這是專門處理 生成式人工智慧 (Generative AI) 的模組。
+
+    用途: 執行這行後，你就可以使用 genai.Client 來建立一個連接到 Google Gemini 模型的客戶端。它是你與 AI 溝通的門戶，負責傳送 Prompt（提示詞）、設定模型參數以及接收回傳的文字或圖片。
+
+2. from google.genai import errors
+
+這行是為了引入「例外處理（錯誤控制）」。
+
+    errors: 這個子模組包含了所有在使用 API 過程中可能遇到的特定錯誤類型。
+
+    為什麼需要它？：在呼叫雲端服務時，常會遇到各種狀況，例如：
+
+        網路連線中斷。
+
+        API Key 錯誤（身分驗證失敗）。
+
+        達到使用量限制（配額不足）。
+
+        輸入內容違反安全政策。
+
+    用途: 讓你能夠使用 try...except 區塊來捕捉這些特定的錯誤，而不是讓程式直接崩潰。
+
+實際運用的樣子
+
+為了讓你更有感，這裡展示這兩行是如何在實際程式碼中分工的：
+
+
+'''Python
+
+from google import genai
+from google.genai import errors
+
+# 1. 使用 genai 建立客戶端
+client = genai.Client(api_key="YOUR_API_KEY")
+
+try:
+    # 呼叫模型
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", 
+        contents="你好，請自我介紹。"
+    )
+    print(response.text)
+
+except errors.ClientError as e:
+    # 2. 使用 errors 來處理特定問題（例如參數設錯或 Key 失敗）
+    print(f"客戶端發生錯誤: {e}")
+except Exception as e:
+    print(f"發生其他未知錯誤: {e}")
+'''
+
+總結
+
+    第一行 genai 是你的工具箱，用來下指令。
+
+    第二行 errors 是你的保險絲，用來處理意外。
+
+請問你目前是在練習串接 Gemini API 嗎？如果是的話，需要我幫你寫一個基礎的連線測試腳本嗎？
+  
