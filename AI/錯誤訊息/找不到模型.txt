@@ -1,0 +1,59 @@
+--- 正在獲取您的可用模型清單 ---
+找到模型: models/embedding-gecko-001
+找到模型: models/gemini-2.5-flash
+找到模型: models/gemini-2.5-pro
+找到模型: models/gemini-2.0-flash-exp
+找到模型: models/gemini-2.0-flash
+找到模型: models/gemini-2.0-flash-001
+找到模型: models/gemini-2.0-flash-exp-image-generation
+找到模型: models/gemini-2.0-flash-lite-001
+找到模型: models/gemini-2.0-flash-lite
+找到模型: models/gemini-2.0-flash-lite-preview-02-05
+找到模型: models/gemini-2.0-flash-lite-preview
+找到模型: models/gemini-exp-1206
+找到模型: models/gemini-2.5-flash-preview-tts
+找到模型: models/gemini-2.5-pro-preview-tts
+找到模型: models/gemma-3-1b-it
+找到模型: models/gemma-3-4b-it
+找到模型: models/gemma-3-12b-it
+找到模型: models/gemma-3-27b-it
+找到模型: models/gemma-3n-e4b-it
+找到模型: models/gemma-3n-e2b-it
+找到模型: models/gemini-flash-latest
+找到模型: models/gemini-flash-lite-latest
+找到模型: models/gemini-pro-latest
+找到模型: models/gemini-2.5-flash-lite
+找到模型: models/gemini-2.5-flash-image
+找到模型: models/gemini-2.5-flash-preview-09-2025
+找到模型: models/gemini-2.5-flash-lite-preview-09-2025
+找到模型: models/gemini-3-pro-preview
+找到模型: models/gemini-3-flash-preview
+找到模型: models/gemini-3-pro-image-preview
+找到模型: models/nano-banana-pro-preview
+找到模型: models/gemini-robotics-er-1.5-preview
+找到模型: models/gemini-2.5-computer-use-preview-10-2025
+找到模型: models/deep-research-pro-preview-12-2025
+找到模型: models/embedding-001
+找到模型: models/text-embedding-004
+找到模型: models/gemini-embedding-exp-03-07
+找到模型: models/gemini-embedding-exp
+找到模型: models/gemini-embedding-001
+找到模型: models/aqa
+找到模型: models/imagen-4.0-generate-preview-06-06
+找到模型: models/imagen-4.0-ultra-generate-preview-06-06
+找到模型: models/imagen-4.0-generate-001
+找到模型: models/imagen-4.0-ultra-generate-001
+找到模型: models/imagen-4.0-fast-generate-001
+找到模型: models/veo-2.0-generate-001
+找到模型: models/veo-3.0-generate-001
+找到模型: models/veo-3.0-fast-generate-001
+找到模型: models/veo-3.1-generate-preview
+找到模型: models/veo-3.1-fast-generate-preview
+找到模型: models/gemini-2.5-flash-native-audio-latest
+找到模型: models/gemini-2.5-flash-native-audio-preview-09-2025
+找到模型: models/gemini-2.5-flash-native-audio-preview-12-2025
+------------------------------
+嘗試使用 models/embedding-gecko-001 發送請求...
+⚠️ 發生錯誤：404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/embedding-gecko-001 is not found for API version v1beta, 
+or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 
+'status': 'NOT_FOUND'}}
