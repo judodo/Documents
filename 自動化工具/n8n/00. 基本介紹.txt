@@ -1,0 +1,53 @@
+1️⃣ n8n 是什麼？
+
+    n8n 是一個 低程式化自動化工作流工具（Low-Code Workflow Automation）
+
+    可以幫助你自動化不同系統與服務之間的流程，例如：
+        API 資料抓取與整合
+        Excel / CSV / Google Sheets 的資料處理
+        與 LLM Agent、Webhook、HTTP Request 整合
+
+    核心概念：用「節點 (Node)」表示任務，用「Workflow」串接節點形成流程
+
+2️⃣ 為什麼要學 n8n？
+
+    簡化自動化流程：不用寫大量程式碼即可完成複雜流程
+    易於整合服務：API、資料庫、文件、LLM 等都能串接
+    快速測試與部署：建立 Workflow → 執行 → 查看結果
+    可擴展性高：後續可與 Docker、LLM Agent、Gradio UI 進行整合
+
+3️⃣ n8n 節點介紹
+節點類型 	功能說明
+Webhook 	接收外部 HTTP 請求，觸發 Workflow
+Function 	自訂程式邏輯，處理資料
+HTTP Request 	向 API 或網站抓取資料
+CSV / Google Sheets 	讀寫資料表，匯入或匯出資料
+Set / Merge 	整合、轉換資料格式
+4️⃣ n8n 基本操作流程（概念示範）
+
+    Workflow → New Workflow
+    拖拉 Webhook 節點 → 設定 URL，例如 /test-webhook
+    拖拉 Function 節點 → 連接到 Webhook，處理資料
+    範例 Function 範例程式碼：
+
+return [{ json: { message: "Hello from n8n" } }];
+
+    回到 Webhook 節點 → 點擊 Execute Node 測試
+
+5️⃣ 測試方法（概念）
+
+    Webhook 節點 URL：http://localhost:5678/webhook/test-webhook
+    可以用 curl 或 Postman 發送測試請求
+
+curl -X POST http://localhost:5678/webhook/test-webhook
+
+    預期輸出：
+
+{"message":"Hello from n8n"}
+
+6️⃣ 小結
+
+    n8n 是自動化工作流工具，概念類似「節點 + Workflow」
+    了解節點類型與基本操作流程
+    此時不需 Docker，重點是熟悉 n8n 的概念與操作邏輯
+    為 明天的 「n8n + Docker 啟動」做準備
