@@ -1,0 +1,31 @@
+from google import genai
+from google.genai import errors
+
+client = genai.Client(api_key="我申請的金鑰")
+
+try:
+    print("--- 正在獲取您的可用模型清單 ---")
+    models = client.models.list()
+    
+    # 建立一個清單來儲存名稱
+    model_names = [m.name for m in models]
+    for name in model_names:
+        print(f"找到模型: {name}")
+    
+    print("-" * 30)
+
+    if model_names:
+        # 自動挑選清單中的第一個模型來測試
+        test_model = model_names[0]
+        print(f"嘗試使用 {test_model} 發送請求...")
+        
+        response = client.models.generate_content(
+            model=test_model, 
+            contents="測試連線，請回答 OK。"
+        )
+        print("AI 回覆：", response.text)
+    else:
+        print("❌ 警告：您的帳號下沒有任何可用模型。")
+
+except Exception as e:
+    print(f"⚠️ 發生錯誤：{e}")
