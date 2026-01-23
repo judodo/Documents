@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "D:\sourceCode\08_AI\my_ai_chatbot\main.py", line 2, in <module>
+    from dotenv import load_dotenv
+ModuleNotFoundError: No module named 'dotenv'
