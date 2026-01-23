@@ -31,14 +31,14 @@ pip install -U google-genai python-dotenv
 ```bash
 GOOGLE_API_KEY=你的_GEMINI_API_KEY
 
-### 2. 執行程式
+## 2. 執行程式
 
 直接執行主程式即可進入對話模式：
 ```bash
 python main_record.py
 
 
-### 3.核心程式碼解析
+## 3.核心程式碼解析
 自動摘要邏輯
 
 為了優化長對話的效能，我們實作了以下壓縮機制：
