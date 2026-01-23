@@ -1,0 +1,21 @@
+「Nexus」一詞在軟體、技術與旅行領域有多種含義。根據 2026 年的最新資訊，最常見的定義如下：
+1. 軟體開發：Sonatype Nexus Repository
+在資訊工程領域，這是指由 Sonatype 開發的成品倉庫管理系統（Artifact Repository Manager）。 
+功能：用於集中存儲、管理與分發軟體開發中的各種組件（如 Java 的 Maven、前端的 npm、Docker 鏡像等）。
+分類邏輯：它將倉庫分為 Hosted（私有）、Proxy（代理外部，如 Maven 中央倉庫）與 Group（組合多個倉庫）三大類。
+最新動態：Sonatype 於 2026 年持續更新版本（如 3.88.0+），強化了對 Terraform 代理倉庫的支持與安全漏洞修復。
+
+2. 跨國旅行：美加快速通關（芳鄰卡）
+這是由美國（CBP）與加拿大（CBSA）聯合管理的受信任旅客計劃。 
+功能：持有「NEXUS 卡（芳鄰卡）」的低風險旅客，在美加邊境入境時可享受快速通關與安檢服務。 
+
+3. 雲端平台：Azure Operator Nexus
+這是微軟推出的電信級混合雲平台。 
+功能：專為行動網路運營商設計，用於部署與優化任務關鍵型網路應用程式，支持高度自動化的網路功能部署。 
+
+4. 其他常見定義
+Google Nexus：Google 早期推出的 Android 旗艦裝置系列（如 Nexus One, Nexus 5），但此系列已於 2016 年被 Pixel 系列取代。
+Nexus 框架：一種用於擴展 Scrum 敏捷開發的框架，適用於多個團隊協作同一個產品。
+MONSTA X 巡迴演唱會：2026 年韓團 MONSTA X 舉行名為 「THE X : NEXUS」 的世界巡迴演唱會。 
+如果您是指「將分類視為一本書」的軟體需求，上述的 Sonatype Nexus 在邏輯上較為接近——它將不同類型的組件（如 Maven 書架、npm 書架）歸類管理在同一個系統中。
+
