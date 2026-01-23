@@ -1,0 +1,52 @@
+圖片看不到通常是因為網路圖片連結失效，或是本機路徑沒有對應好。在 Slidev 中使用自己電腦上的圖片是非常推薦的做法，穩定且快速。
+
+以下是調整步驟：
+1. 存放圖片的正確位置
+
+Slidev 預設會讀取專案資料夾中的 public 資料夾。
+
+    在你的專案根目錄下（跟 slides.md 同一層），建立一個名為 public 的資料夾。
+
+    將你的植物照片放進去。例如：dujuan.jpg, banyan.jpg, pothos.jpg。
+
+2. 在 slides.md 中指定路徑
+
+在代碼中引用時，不需要寫 public/，直接從 / 開始寫即可。
+
+請將原本的 <img> 標籤修改如下：
+Markdown
+
+# 01. 杜鵑花 (Azalea)
+
+<div class="grid grid-cols-2 gap-4 mt-8">
+  <img src="/dujuan1.jpg" class="rounded shadow h-60 w-full object-cover" />
+  
+  <img src="/dujuan2.jpg" class="rounded shadow h-60 w-full object-cover" />
+</div>
+
+3. 修改背景圖片 (第一頁)
+
+如果你想把第一頁的背景也換成校園實拍圖，請修改最上方的 YAML 區塊：
+Markdown
+
+---
+theme: seriph
+background: /campus_bg.jpg  # 確保這張圖放在 public 資料夾下
+class: text-center
+---
+
+4. 為什麼還是看不到？(檢查清單)
+
+如果改了路徑還是顯示空白，請檢查：
+
+    檔名大小寫： Linux/Mac 系統對大小寫很敏感，Dujuan.JPG 和 dujuan.jpg 是不同的。
+
+    副檔名： 確定是 .jpg 還是 .png 或 .jpeg。
+
+    重新啟動： 有時候新增了 public 資料夾需要重開開發環境，請在終端機按下 Ctrl+C 結束，再重新執行 npm run dev。
+
+5. 快速修正建議
+
+如果你手邊還沒有照片，但想先看到效果，可以使用穩定的 Placeholder（佔位圖）服務，將 src 改成這樣： src="https://picsum.photos/600/400?random=1"
+
+你可以先試著把一張圖片放入 public 資料夾並修改 slides.md，看看預覽畫面是否有出現圖片！
