@@ -1,0 +1,79 @@
+這是一個升級版的腳本。它不只會建立檔案結構，還會自動執行以下動作：
+
+    建立虛擬環境 (.venv)。
+
+    升級 pip 並安裝基礎開發套件 (pytest, ruff, black)。
+
+    嘗試自動開啟 VS Code 進入該專案。
+
+自動化專案產生器 (init_project.py)
+Python
+
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+def run_command(command, cwd=None):
+    """執行終端機指令並顯示結果"""
+    try:
+        subprocess.run(command, shell=True, check=True, cwd=cwd)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ 執行指令失敗: {command}\n錯誤: {e}")
+
+def create_project(project_name):
+    project_path = Path(project_name).resolve()
+    
+    # 1. 建立目錄結構
+    folders = ["src", "tests", ".vscode"]
+    for folder in folders:
+        (project_path / folder).mkdir(parents=True, exist_ok=True)
+
+    # 2. 定義初始檔案內容
+    files = {
+        "src/__init__.py": "",
+        "src/main.py": 'def main():\n    print("Hello from project setup!")\n\nif __name__ == "__main__":\n    main()',
+        "tests/__init__.py": "",
+        "tests/test_main.py": "def test_success():\n    assert True",
+        ".gitignore": "__pycache__/\n.venv/\n.vscode/\n*.pyc\n.pytest_cache/\n",
+        "requirements.txt": "pytest\nblack\nruff",
+        ".vscode/settings.json": """{
+    "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.black-py-formatter",
+    "editor.codeActionsOnSave": { "source.organizeImports": "explicit" }
+}"""
+    }
+
+    for rel_path, content in files.items():
+        with open(project_path / rel_path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    print(f"📂 專案結構已建立於: {project_path}")
+
+    # 3. 建立虛擬環境
+    print("🛠️ 正在建立虛擬環境 (.venv)...")
+    run_command(f"{sys.executable} -m venv .venv", cwd=project_path)
+
+    # 4. 安裝基礎套件
+    # 根據作業系統決定 pip 路徑
+    pip_exe = ".venv\\Scripts\\pip" if os.name == "nt" else ".venv/bin/pip"
+    
+    print("📦 正在升級 pip 並安裝開發套件 (pytest, black, ruff)...")
+    run_command(f"{pip_exe} install --upgrade pip", cwd=project_path)
+    run_command(f"{pip_exe} install -r requirements.txt", cwd=project_path)
+
+    print(f"\n✅ 專案 '{project_name}' 初始化完成！")
+    
+    # 5. 嘗試自動開啟 VS Code
+    try_open = input("是否立即使用 VS Code 開啟此專案？ (y/n): ").lower()
+    if try_open == 'y':
+        run_command(f"code .", cwd=project_path)
+
+if __name__ == "__main__":
+    name = input("請輸入專案名稱: ").strip()
+    if name:
+        create_project(name)
+    else:
+        print("請輸入有效的名稱。")
