@@ -1,0 +1,20 @@
+如何將其變成可執行的工具？
+
+如果你希望在任何地方都能輸入指令來建立專案，有兩個方法：
+方法 A：包裝成 .exe (Windows 適用)
+
+你可以使用 pyinstaller 將此腳本打包：
+
+    安裝工具：pip install pyinstaller
+
+    執行打包：pyinstaller --onefile init_project.py
+
+    打包完成後，在 dist/ 資料夾下會出現 init_project.exe，你可以把它移動到任何你習慣存放工具的地方。
+
+方法 B：建立 Alias (推薦，開發者最常用)
+
+如果你不想打包，可以利用系統的別名功能：
+
+    Windows (PowerShell): 在你的 $PROFILE 檔案中加入： function mkpy { python C:\你的路徑\init_project.py }
+
+    Mac/Linux: 在 .zshrc 或 .bashrc 加入： alias mkpy='python3 /你的路徑/init_project.py'
