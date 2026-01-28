@@ -1,0 +1,338 @@
+資料來源 : https://realnewbie.com/posts/mongodb-beginner-guide-flexible-high-performance-nosql-database
+
+在現代開發中，資料庫是應用程式的核心之一。許多開發者熟悉 MySQL、PostgreSQL 這類 關聯式資料庫（RDBMS），但近年來 NoSQL 資料庫 逐漸成為熱門選擇，尤其是 MongoDB。
+
+MongoDB 是一種靈活、高效的 NoSQL 資料庫，特別適合 大數據處理、雲端應用、即時分析、IoT（物聯網） 等應用場景。
+
+如果你是新手，本篇文章將帶你了解 MongoDB 的概念、特點、如何使用，以及它與傳統關聯式資料庫的不同之處。
+
+什麼是 MongoDB？
+MongoDB 是一款基於文件（Document-Oriented）的 NoSQL 資料庫，由 MongoDB Inc. 開發，使用 JSON 格式（實際上是 BSON，Binary JSON）來存儲數據。
+
+相較於傳統的關聯式資料庫（如 MySQL），MongoDB 不使用表格和行，而是透過「文件（Document）」和「集合（Collection）」來組織數據。
+
+MongoDB 名稱的由來
+MongoDB 的名稱來自於單字 “humongous”（巨大的），代表著它的核心設計目標：能夠處理海量數據（Big Data）。
+
+當 MongoDB 於 2007 年由 10gen（現為 MongoDB Inc.） 創立時，團隊的初衷是開發一個高效、可擴展、靈活的資料庫，以適應現代應用的需求。他們希望資料庫能夠輕鬆處理大規模數據（humongous data），因此將其命名為 MongoDB。
+
+MongoDB 要解決的問題
+MongoDB 的誕生是為了解決傳統 關聯式資料庫（SQL） 在應對現代應用需求時所面臨的一些挑戰：
+
+大數據與高擴展性
+問題：SQL 資料庫的擴展性限制
+在傳統的 關聯式資料庫（RDBMS） 中，所有的數據通常存儲在單一的伺服器或一組伺服器內部。
+
+當數據量變大時，SQL 資料庫的擴展方式通常是 垂直擴展（Vertical Scaling），也就是：
+
+增加 更強的 CPU、更多的記憶體（RAM） 或 更快的磁碟（SSD） 來提升單台伺服器的處理能力。
+然而，這種方法有其物理限制：
+
+成本高昂：隨著硬體升級，價格成倍增長，並不是長久之計。
+單點故障風險（Single Point of Failure）：如果主伺服器發生故障，整個資料庫就會掛掉，影響應用運行。
+難以應對非結構化或半結構化數據：例如使用者行為日誌、社交媒體貼文、感測器數據等，這些數據類型變化大，在 SQL 資料庫中管理不易。
+MongoDB 的解決方案：支援水平擴展（Sharding）
+MongoDB 的設計從一開始就考慮到「如何處理大規模數據」。
+
+與 SQL 的垂直擴展不同，MongoDB 支援水平擴展（Sharding），可以將數據分散儲存在多台伺服器（節點）中，組成一個分散式系統。
+
+什麼是 Sharding？
+Sharding（分片）是一種將大數據集拆分到多台伺服器上的技術，每台伺服器只負責存儲部分數據，這樣：
+
+當數據量增長時，只需增加更多伺服器，而不必升級單台機器。
+所有伺服器可以同時處理請求，提高讀取與寫入效能。
+MongoDB Sharding 運作方式
+數據拆分：
+透過某個欄位（Sharding Key），MongoDB 會將數據劃分成多個「分片（Shard）」。
+例如，若 user_id 是 Sharding Key，則 MongoDB 會將 user_id 範圍不同的數據存放到不同的 Shard 伺服器上。
+負載均衡（Load Balancing）：
+當某個 Shard 承受過多讀取或寫入時，MongoDB 會自動重新平衡數據，確保請求能夠均衡分佈在不同的 Shard 上。
+查詢分發：
+查詢請求由 mongos 路由伺服器處理，它會根據 Sharding Key 自動決定該從哪個 Shard 讀取數據。
+Sharding 的優勢
+✅ 擴展性極強：MongoDB 能夠橫向擴展，可處理海量數據，適合大規模應用。
+✅ 降低單點故障風險：數據分散存放，若一台伺服器掛掉，其他伺服器仍可運作。
+✅ 提升效能：分片後，讀取與寫入請求能夠同時處理，大幅提升應用的效能。
+
+傳統 SQL 設計對靈活性的限制
+問題：SQL 資料庫的 Schema 限制
+在關聯式資料庫中，所有表（Table）都需要預先定義結構（Schema），包括：
+
+欄位名稱（Column Names）
+資料類型（Integer、Varchar、DateTime 等）
+欄位是否允許 NULL
+外鍵（Foreign Key）約束
+如果數據格式發生變更，例如：
+
+需要為 users 表新增 phone_number 欄位
+需要為 orders 表增加 tracking_number
+那麼你必須 ALTER TABLE，並遷移現有數據，這在大型應用中可能會影響系統效能。
+
+MongoDB 的解決方案：動態架構（Flexible Schema）
+MongoDB 無需預先定義 Schema，它採用 JSON/BSON 文件存儲，允許不同的文件擁有不同的欄位。例如：
+
+// 用戶 A
+{
+  "name": "Alice",
+  "age": 25
+}
+
+// 用戶 B（不同結構）
+{
+  "name": "Bob",
+  "email": "bob@example.com"
+}
+這讓 MongoDB 更加靈活，適合開發快速變動的應用，例如：
+
+SaaS 產品、新創公司：頻繁變更數據結構而不影響現有數據。
+內容管理系統（CMS）：不同類型的內容可以有不同的屬性，無需統一結構。
+高併發與效能
+問題：SQL 資料庫的效能瓶頸
+在高流量應用中，SQL 資料庫可能會因為：
+
+JOIN 操作過多，導致查詢變慢。
+行級鎖或表級鎖（Locking），導致高併發時效能下降。
+MongoDB 的解決方案
+✅ 文件式存儲（Document-based Storage）
+
+MongoDB 以 嵌套結構 儲存數據，減少 JOIN 操作。例如：
+
+{
+  "name": "Alice",
+  "orders": [
+    { "order_id": 1, "price": 100 },
+    { "order_id": 2, "price": 150 }
+  ]
+}
+這樣，我們可以一次讀取所有 orders，避免跨表 JOIN，提高查詢速度。
+
+✅ 內建索引與快取
+
+MongoDB 允許在任何欄位上建立索引，大幅提升查詢效能：
+
+db.users.createIndex({ "email": 1 })
+補充：什麼是行級鎖（Row Locking）與表級鎖（Table Locking）？
+在關聯式資料庫（SQL 資料庫）中，當多個用戶同時對資料進行讀寫操作時，為了確保數據一致性，資料庫需要使用「鎖機制（Locking）」來控制並發訪問（Concurrency Control）。
+
+這些鎖通常分為 行級鎖（Row Locking） 和 表級鎖（Table Locking）。
+
+鎖機制的作用是：
+
+防止多個請求同時修改同一條數據，導致不一致的結果。
+確保讀寫操作的安全性，避免競爭條件（Race Condition）。
+但這些鎖也可能帶來效能瓶頸，特別是在高併發應用中，影響資料庫的讀取與寫入效能。
+
+1️⃣ 表級鎖（Table Locking）
+表級鎖是什麼？
+表級鎖（Table Locking） 會鎖住整張表，當一個查詢或更新操作執行時，其他對該表的讀寫操作必須等待鎖釋放。
+
+問題：為何表級鎖會影響效能？
+假設你有一個 orders 表，當一個用戶更新一筆訂單：
+
+UPDATE orders SET status = 'shipped' WHERE order_id = 123;
+如果你的資料庫使用 表級鎖，那麼：
+
+其他用戶無法讀取或更新 orders 表內的任何數據，直到當前更新操作完成並釋放鎖。
+如果有大量請求同時發生，這些請求將排隊等待鎖釋放，導致請求延遲。
+哪些 SQL 資料庫使用表級鎖？
+MyISAM（MySQL 早期的儲存引擎）
+部分 OLAP 資料庫（如 ClickHouse）
+某些 NoSQL 資料庫（如 Redis 在某些情況下會鎖住 Key）
+表級鎖適合批次處理（Batch Processing），但在高併發應用中，會嚴重影響效能。
+
+2️⃣ 行級鎖（Row Locking）
+行級鎖是什麼？
+行級鎖（Row Locking） 只會鎖住被修改的單行數據，而不影響同一張表中的其他行。
+
+行級鎖如何提升效能？
+以 MySQL 的 InnoDB 儲存引擎為例：
+
+UPDATE orders SET status = 'shipped' WHERE order_id = 123;
+這次操作只會鎖住 order_id = 123 這一行，其他用戶仍然可以同時讀取或修改 orders 表內的其他訂單數據。
+這樣可以提高並發性，因為大部分請求不會彼此等待。
+行級鎖的優勢
+✅ 更適合高併發應用（如交易系統、即時應用）。
+✅ 只影響特定行，不會影響整張表。
+
+行級鎖的挑戰
+❌ 鎖的管理成本較高，每個鎖都需要額外的記憶體與計算資源。
+❌ 死鎖風險（Deadlock），如果多個交易互相鎖定不同的行，可能會導致系統無法繼續執行。
+
+哪些 SQL 資料庫使用行級鎖？
+InnoDB（MySQL）
+PostgreSQL
+Oracle
+SQL Server
+3️⃣ 為何 MongoDB 沒有這個問題？
+MongoDB 採用 文檔存儲模型（Document-Based Storage），不使用 SQL 的「鎖機制」，而是透過原子操作（Atomic Operations） 和 樂觀鎖機制（Optimistic Locking） 來確保資料一致性。
+
+MongoDB 如何處理併發？
+MongoDB 不需要行級鎖或表級鎖，因為它的數據是以獨立的 JSON 文件 存儲的，每次修改時，MongoDB 直接修改該文件，不影響其他數據。
+MongoDB 使用 寫入級別鎖（Write Concern），確保寫入操作的安全性，而不會鎖住整個集合（Table）。
+例如：
+
+db.orders.updateOne(
+  { "order_id": 123 },
+  { $set: { "status": "shipped" } }
+)
+這個操作 只影響 order_id = 123 的文件，其他請求仍然可以存取 orders 集合。
+
+MongoDB 相比 SQL 的優勢
+✅ 避免表級鎖，讀寫操作不會互相影響。
+✅ 不需要 JOIN，查詢速度更快（因為數據存儲在 JSON 文檔內）。
+✅ 內建索引與快取機制，提升查詢效能。
+
+4️⃣結論
+鎖類型	影響範圍	適用場景	缺點
+表級鎖（Table Lock）	鎖住整張表	批次處理、資料倉儲	影響並發性，高流量應用會遇到瓶頸
+行級鎖（Row Lock）	只鎖住特定行	交易系統、即時應用	管理成本高，可能發生死鎖
+MongoDB 文檔存儲	只影響特定文檔	高併發應用、大數據、雲端應用	不支援傳統 SQL JOIN，需要設計良好的索引
+MongoDB 透過「文檔式存儲 + 原子操作」，避免了 SQL 資料庫中常見的 表級鎖與行級鎖問題，讓它在高併發環境下表現更出色。
+
+因此，在需要處理大量讀取與寫入的應用程式（如社群媒體、電商、即時數據分析）時，MongoDB 會是一個更好的選擇！
+
+NoSQL 在現代應用中的需求
+問題：SQL 無法應對某些應用需求
+隨著 雲端運算、物聯網（IoT）、社群媒體 的發展，應用程式需要：
+
+儲存大規模非結構化數據
+快速讀取與寫入
+靈活的數據模型
+SQL 資料庫難以處理這些需求，MongoDB 則提供了解決方案。
+
+MongoDB 的解決方案
+✅ 靈活的 NoSQL 結構：適合日誌數據、IoT 物聯網、社群媒體貼文等。
+✅ 內建全文搜尋與地理查詢：適合搜尋引擎、導航應用。
+✅ JSON API 整合：開發者可直接透過 RESTful API 讀取 MongoDB 數據。
+
+MongoDB 的設計初衷
+MongoDB 並不是用來完全取代 SQL 資料庫，而是為了補足傳統資料庫的不足，特別是在下列場景中：
+
+✅ 需要快速開發與靈活數據存儲（例如 SaaS 產品、新創公司）
+✅ 處理大量非結構化或半結構化數據（如社群媒體、即時分析）
+✅ 需要大規模水平擴展（如雲端應用、大數據處理）
+✅ 高併發、高效能應用（如即時通訊、遊戲伺服器）
+
+MongoDB 透過其 靈活的數據模型、高擴展性 和 優秀的讀寫效能，成為許多現代應用開發者的首選資料庫之一。🚀
+
+MongoDB 的核心概念
+文件（Document）
+MongoDB 的基本存儲單位是 文件（Document），類似於 JSON 物件。例如：
+
+{
+  "name": "Alice",
+  "age": 25,
+  "email": "alice@example.com",
+  "address": {
+    "city": "Taipei",
+    "zipcode": "100"
+  }
+}
+這樣的結構類似於 JSON，讓開發者能夠更直觀地操作資料。
+
+集合（Collection）
+集合（Collection）類似於關聯式資料庫的「表（Table）」，但沒有固定的結構。
+例如，一個 users 集合可以存放不同結構的文件：
+
+// 用戶 A
+{
+  "name": "Alice",
+  "age": 25
+}
+
+// 用戶 B（不同結構）
+{
+  "name": "Bob",
+  "email": "bob@example.com"
+}
+這與 MySQL 等 RDBMS 不同，因為傳統的 SQL 表格要求所有欄位必須一致，而 MongoDB 允許不同的文件有不同的欄位，提升了靈活性。
+
+_id（唯一識別碼）
+MongoDB 每個文件都會自動生成一個 _id，類似於 SQL 資料庫的「主鍵（Primary Key）」：
+
+{
+  "_id": "65a9fbc4d4f7a2c1",
+  "name": "Charlie"
+}
+這個 _id 確保了每個文件的唯一性，MongoDB 會自動為它分配一個 ObjectId。
+
+BSON（Binary JSON）
+MongoDB 實際上使用 BSON（Binary JSON）來存儲數據，這是一種二進制格式，比 JSON 更快，並支援更多數據類型（如日期、二進制數據）。
+
+MongoDB 與關聯式資料庫（SQL）的比較
+特性	MongoDB（NoSQL）	MySQL / PostgreSQL（SQL）
+資料結構	無結構（靈活的 JSON 文件）	表格與欄位（Schema-based）
+查詢語言	MongoDB 查詢語法（類似 JSON）	SQL（結構化查詢語言）
+擴展性	水平擴展（Sharding）	通常是垂直擴展
+交易支持	從 MongoDB 4.0 開始支援 ACID 交易	完整 ACID 交易支持
+適用場景	大數據、即時分析、分散式應用	金融、傳統企業應用
+簡單來說：
+
+如果你的數據結構變化大，MongoDB 會更靈活。
+如果你需要複雜的關聯查詢（JOIN），SQL 可能更適合。
+MongoDB 的特點與優勢
+✅ 靈活的數據模型：文件結構可變，不需要像 SQL 那樣定義固定欄位。
+✅ 高擴展性：可輕鬆水平擴展（Sharding），適合大數據應用。
+✅ 高效能：讀取與寫入速度快，適合高併發應用。
+✅ 內建複製與分片機制：提供自動備份與高可用性。
+✅ 內建全文搜尋與地理查詢功能，適合搜尋與地理位置應用。
+
+MongoDB 的應用場景
+MongoDB 適合以下場景：
+
+即時應用（如聊天應用、遊戲數據存儲）
+內容管理系統（CMS）（如部落格、新聞網站）
+大數據與分析（MongoDB 可存儲與處理大量非結構化數據）
+物聯網（IoT）與感測器數據（高頻率資料寫入的應用）
+電商網站（適合產品、訂單等靈活數據）
+如果你的應用需要快速開發、大量讀取與寫入、非結構化數據存儲，MongoDB 會是一個不錯的選擇。
+
+如何安裝 MongoDB
+在 Ubuntu 上安裝
+# 更新系統
+sudo apt update
+
+# 安裝 MongoDB
+sudo apt install -y mongodb
+
+# 啟動 MongoDB
+sudo systemctl start mongodb
+sudo systemctl enable mongodb
+在 macOS 上安裝
+brew tap mongodb/brew
+brew install mongodb-community
+在 Windows 上安裝
+到 MongoDB 官網（https://www.mongodb.com/try/download/community）下載安裝程式。
+安裝完成後，啟動 MongoDB 服務： net start MongoDB
+MongoDB 基本操作
+啟動 MongoDB
+
+mongod --dbpath /data/db
+連接到 MongoDB
+
+mongo
+建立資料庫
+
+use mydatabase
+插入文件
+
+db.users.insertOne({ "name": "Alice", "age": 25 })
+查詢數據
+
+db.users.find()
+更新數據
+
+db.users.updateOne({ "name": "Alice" }, { $set: { "age": 26 } })
+刪除數據
+
+db.users.deleteOne({ "name": "Alice" })
+結論
+MongoDB 是一款強大的 NoSQL 資料庫，適用於現代應用開發，特別是需要靈活、高效存儲數據的場景。
+本篇文章幫助你了解：
+
+✅ MongoDB 是什麼，它的核心概念
+✅ MongoDB 與 SQL 資料庫的區別
+✅ MongoDB 的優勢與應用場景
+✅ 如何安裝與基本操作
+
+如果你想要開發即時應用、物聯網、或大數據相關的專案，MongoDB 會是一個值得學習的技術！🚀
