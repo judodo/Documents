@@ -1,0 +1,59 @@
+python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+
+
+
+
+問題出在你的電腦裡裝了多個版本的 Python。
+你的套件（PyInstaller）是裝在 C:\Users\goodk\AppData\Roaming\Python\Python314\...（用戶路徑），
+但你現在執行的 C:\Python314\python.exe 卻是系統路徑，這兩者之間不互通，所以它找不到模組。
+別擔心，我們直接用「絕對路徑」來精準擊中它！請試試看這個指令：
+
+解決方案：使用完整路徑執行
+請將下面的指令複製到你的終端機：
+%AppData%\Python\Python314\Scripts\pyinstaller.exe --onefile --windowed --collect-all tkinterdnd2 main.py
+
+如果上面的指令顯示「找不到路徑」，請改用這個：
+這會叫 Python 自動去尋找屬於「用戶安裝」的模組：
+python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+
+為什麼會這樣？（簡單科普）
+    系統路徑 (C:\Python314)：這是主程式，通常是乾淨的。
+    用戶路徑 (AppData\Roaming)：這是你剛才執行 pip install 時，因為權限不足，Python 自動幫你把工具存在這裡。
+所以我們必須直接去用戶路徑的 Scripts 資料夾裡把 pyinstaller.exe 叫出來工作。
+
+成功打包後的下一步建議：
+    檢查 dist 資料夾：成功後，你的 EXE 會躺在那裡。
+    右鍵管理員執行：第一次執行建議按右鍵選「以系統管理員身分執行」，確保它有權限讀寫你拖進去的圖片。
+試試看第一個「絕對路徑」的指令，如果跑出一長串正在分析檔案的文字，那就代表我們成功繞過環境變數的問題了！成功了嗎？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
