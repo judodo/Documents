@@ -1,0 +1,19 @@
+To control the namespace alias, use XmlSerializerNamespaces.
+
+[XmlRoot("Node", Namespace="http://flibble")]
+public class MyType {
+    [XmlElement("childNode")]
+    public string Value { get; set; }
+}
+
+static class Program
+{
+    static void Main()
+    {
+        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+        ns.Add("myNamespace", "http://flibble");
+        XmlSerializer xser = new XmlSerializer(typeof(MyType));
+        xser.Serialize(Console.Out, new MyType(), ns);
+    }
+}
+If you need to change the namespace at runtime, you can additionally use XmlAttributeOverrides.
