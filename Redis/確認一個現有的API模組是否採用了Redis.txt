@@ -1,0 +1,60 @@
+要確認一個現有的 API 模組是否採用了 Redis + Oracle 的快取機制，你不需要通讀每一行程式碼，可以透過「看文件」、「問系統」和「查程式」三個層次來拆解。
+
+這裡我為你整理了幾種專業的詢問方式與檢查清單：
+1. 如何詢問開發者或架構師？
+
+如果你身邊有相關的工程師，你可以直接用以下這些「專業術語」詢問，這會讓你聽起來非常內行：
+    詢問快取策略： 「這支 API 是採用 Cache-Aside 模式嗎？它是如何確保 Redis 與 Oracle 之間的資料一致性的？」
+    詢問過期機制： 「Redis 裡的資料有設定 TTL (Time To Live) 嗎？如果是 Oracle 端的資料變動了，Redis 會被強制 Evict (剔除) 還是等待過期？」
+    詢問降級處理： 「如果 Redis 服務掛掉了，API 有沒有做 Fallback 機制直接去查 Oracle？」
+    針對 AI 場景： 「我們的 AI 模組是用 Redis 做 Semantic Cache (語義快取) 還是純粹存儲 Session Conversation (對話上下文)？」
+
+2. 觀察 API 響應時間 (效能特徵)
+
+你可以使用 Postman 或 Chrome 開發者工具觀察 Time (響應時間)：
+    第一次請求：如果花了 200ms - 500ms (這通常是去 Oracle 撈資料)。
+    第二次請求：如果瞬間掉到 10ms - 30ms (這極度可能是從 Redis 拿到的)。
+    特徵：如果回應速度有「由慢變極快」的落差，通常就是有快取機制。
+
+3. 如何在原始碼中「肉眼掃描」？
+
+如果你能看到程式碼，請直接搜尋以下關鍵組合，它們同時出現就是實證：
+關鍵字組合 A：連線庫 (Import/Dependency)
+
+搜尋專案的 package.json (Node.js), pom.xml (Java) 或 requirements.txt (Python)：
+
+    有沒有同時出現 oracledb 和 redis？
+
+    有沒有出現 spring-boot-starter-cache？
+
+關鍵字組合 B：程式碼邏輯
+
+在一個 .java 或 .js 檔案中同時搜尋：
+
+    SELECT 或 UPDATE (Oracle 的動作)
+
+    GET, SET, DEL 或 EXPIRE (Redis 的動作)
+
+4. 觀察日誌 (Logs)
+
+如果系統有輸出日誌，這是一眼看出端倪的最佳路徑：
+
+    搜尋關鍵字：Cache Hit, Cache Miss, Fetching from DB, Syncing to Redis.
+
+    如果看到日誌寫著："User data found in cache, skipping DB query"，那就百分之百確定了。
+
+5. 檢查資料庫工具
+
+    看 Redis Insight：打開你之前的 http://localhost:5540，看看裡面的 Key 命名。如果 Key 的名字長得像 user:101:profile 且裡面的內容跟 Oracle 的資料雷同，那這就是證據。
+
+    監控指令：在終端機執行 docker exec -it redis-server redis-cli -a 你的密碼 monitor。然後去操作你的 UI 介面，看看有沒有東西噴出來。
+
+💡 總結建議
+
+如果你要問你的團隊，最好的開場白是：
+
+    「我想了解目前 API 的效能優化架構。我們在讀取資料時，是否已經實作了以 Redis 作為 Oracle 前端快取的機制？如果有，我們是如何處理資料更新時的同步問題？」
+
+這句話會立刻讓對方的技術人員進入狀況，並詳細解釋他們的設計。
+
+你想讓我幫你寫一封正式的 Email 或 Slack 訊息來詢問你的開發團隊嗎？
