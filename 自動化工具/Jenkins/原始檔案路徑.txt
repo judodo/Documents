@@ -1,0 +1,63 @@
+這是一個非常「底層」且有效的觀察角度。答案是肯定的。 如果你擁有 Jenkins Server 的作業系統登入權限（例如透過 SSH 登入 Linux，或者在 Jenkins 介面內使用執行指令的權限），你確實可以直接在 Server 的磁碟中翻閱這些 AI 專案的原始檔。
+
+以下是身為「探索者」可以搜尋的幾個關鍵路徑與方法：
+1. 預設的程式碼存放路徑
+
+Jenkins 預設會將所有 Job 的原始碼存放在它的主目錄下。如果你能登入 Linux 背景，請直接前往：
+
+    路徑： /var/lib/jenkins/workspace/
+
+    結構： 這裡面會以 Job 的名稱 命名資料夾。例如：/var/lib/jenkins/workspace/AI-Customer-Service/。
+
+    內容： 進去後，你會看到當初從 Git 抓下來的所有檔案（.py, .env, Dockerfile 等）。
+
+    [!NOTE] 如果你的 Jenkins 是裝在 Windows 上，路徑通常在 C:\ProgramData\Jenkins\.jenkins\workspace\。
+
+2. 如果沒有 SSH 權限，可以使用「Script Console」
+
+這是 Jenkins 內建的一個「超級後門」。如果你在 Jenkins 網頁介面有管理員權限，但無法 SSH 登入 Server，你可以透過 Script Console 執行系統指令來讀取檔案。
+
+    位置： Manage Jenkins (管理 Jenkins) -> Nodes (節點) -> 點擊某個 Node -> Script Console (指令碼主控台)。
+
+    讀取指令 (Groovy)：
+    Groovy
+
+    // 列出 workspace 下的檔案
+    def process = "ls -R /var/lib/jenkins/workspace/你的專案名稱".execute()
+    println process.text
+
+    這會強行印出 Server 磁碟上的檔案清單。
+
+3. 追蹤「部署後」的路徑
+
+有時候 Jenkins 的 Workspace 只是暫存區，程式碼在建置完後會被送到最終的運行位置。你可以檢查以下地方：
+
+    Docker 映像層： 如果 Jenkins 執行了 docker build，程式碼就被封裝進 Image 了（如我們之前討論過的）。
+
+    Nginx/Apache 目錄： 如果是前端介面，可能會被複製到 /var/www/html/。
+
+    系統服務： 檢查 /etc/systemd/system/ 下的 .service 檔案，裡面會寫著 AI 程式（如 FastAPI 或 Flask）實際執行的目錄。
+
+4. 關鍵檔案：尋找 Redis 與 Oracle 的痕跡
+
+當你在 Server 上翻找檔案時，請優先鎖定這兩個「異質資料庫」的連線設定，這能證明該程式確實同時使用了兩者：
+
+    .env 檔案： 裡面通常藏著 REDIS_HOST=... 或 ORACLE_DB_URL=...。
+
+    config/ 資料夾： 尋找 database.yaml 或 redis_config.json。
+
+    src/database/： 這是開發者最愛放「資料庫連線池（Connection Pool）」程式碼的地方。
+
+💡 潛在的困難與「反追查」障礙
+
+即便你登入了 Server，仍可能遇到以下狀況：
+
+    分散式節點 (Distributed Agents)： 程式碼可能不在 Jenkins Master 上，而是在某台執行建置的 Slave 機器上。
+
+    短期容器 (Ephemeral Containers)： 如果公司是用 Kubernetes (K8s) 跑 Jenkins，任務跑完後，整個執行環境（含檔案）會被立刻銷毀。這時你就只能回頭去 Git 倉庫 看了。
+
+總結
+
+登入 Server 是最直接的「物理性」追查。只要你能進到 /var/lib/jenkins/workspace/，你就能看到 UI 介面如何呼叫 Redis 做快取、如何連向 Oracle 存資料的所有邏輯。
+
+你想知道如何寫一段簡單的指令，在整台 Server 裡搜尋包含 "oracle" 或 "redis" 關鍵字的設定檔嗎？這可以幫你快速定位！
