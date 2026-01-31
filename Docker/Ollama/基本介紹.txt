@@ -1,0 +1,46 @@
+簡單來說，Ollama Docker image 是將 Ollama（一個讓你能在電腦本地跑 AI 大模型的工具）打包好的「軟體貨櫃」。
+
+如果你想在不污染主機系統環境、或是想在伺服器上快速部署 Llama 3、Mistral 等 AI 模型，使用 Docker 鏡像（Image）是最專業且乾淨的做法。
+為什麼要用 Docker 版的 Ollama？
+
+    環境隔離：不需要在你的電腦安裝一堆 Python 套件或相依函式庫，所有東西都關在 Docker 容器（Container）裡。
+
+    快速部署：一行指令就能跑起來，省去配置環境變數的麻煩。
+
+    跨平台一致性：無論是在 Linux、Windows (WSL2) 還是伺服器上，運行結果都一樣。
+
+    易於管理：想升級時直接換個 Image 標籤，想刪除時直接移除容器，不留痕跡。
+
+如何快速開始？
+1. 僅使用 CPU 運行
+
+如果你的設備沒有 NVIDIA 顯卡（例如一般文書筆電），可以使用這個指令：
+Bash
+
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+2. 使用 NVIDIA GPU 加速（推薦）
+
+如果你有 NVIDIA 顯卡，且已安裝好 nvidia-container-toolkit，可以使用 GPU 讓 AI 回答速度快上好幾倍：
+Bash
+
+docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+3. 如何下載並執行模型？
+
+容器啟動後，你可以直接透過 docker exec 指令來叫模型「開工」。例如跑最新的 Llama 3：
+Bash
+
+docker exec -it ollama ollama run llama3
+
+常用的參數說明
+
+    -d: 讓容器在背景執行（Detached mode）。
+
+    -v ollama:/root/.ollama: 這是最重要的部分。它會建立一個持久化的空間，讓你下載的幾 GB 大模型存在硬碟裡，不會因為容器重啟而消失。
+
+    -p 11434:11434: 把容器內的 API 埠口對接到你電腦的 11434 埠，方便你配合 Web UI（如 Open WebUI）使用。
+
+    [!TIP] 許多人會搭配 Open WebUI 的 Docker 鏡像一起使用，這樣就能擁有像 ChatGPT 一樣漂亮的網頁介面來操作本地的 Ollama 了。
+
+你想進一步了解如何將這個 Docker 鏡像與網頁介面（Web UI）整合在一起嗎？
