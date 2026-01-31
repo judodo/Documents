@@ -1,0 +1,43 @@
+在 Jenkins 中，你絕對有機會看到 AI 專案的原始檔案。Jenkins 的本質就是一個「搬運工」，它會把程式碼從倉庫（如 GitLab/GitHub）抓下來進行建置。
+
+以下是三種在 Jenkins 中「找到原始碼」的方法：
+1. 透過「Workspace (工作區)」查看（最直接）
+
+當一個 Jenkins 任務（Job）執行成功後，它會將所有的原始碼存放在伺服器的實體資料夾中。
+    操作步驟：
+        進入 Jenkins 該專案的主頁。
+        在左側選單中尋找 「Workspace」(工作區)。
+        點進去後，你就能像在檔案總管一樣，瀏覽所有的 .py、.js 或 Dockerfile 原始檔案。
+    注意：如果你沒看到 Workspace 連結，可能是因為該任務最近沒有執行（工作區被清空），或是你沒有 Job/Workspace 的權限。
+
+2. 透過「Console Output (控制台輸出)」追蹤
+
+如果你想知道這些程式碼是從哪裡抓下來的，可以看日誌。
+    操作步驟：
+        點擊某次建置紀錄（例如 #42）。
+        選擇 「Console Output」。
+        在日誌的最開頭，尋找 Checking out revision... 或 git clone 後面的網址。
+        這就是原始碼真正的家（例如公司內部的 GitLab 連結）。
+
+3. 查看「Pipeline Script (流水線腳本)」
+
+如果專案是使用 Pipeline 模式，你可以直接看它的「劇本」，了解它是如何呼叫 Redis 或 Oracle 的。
+    操作步驟：
+
+        在專案頁面點擊 「Configure (組態)」。
+        捲動到最下方的 Pipeline 區塊。
+        如果你看到 Definition: Pipeline script from SCM，這代表程式碼被存放在 Git 裡，且有一個 Jenkinsfile 定義了流程。
+
+💡 專業提示：AI 專案的特殊性
+
+在 Jenkins 裡看 AI 專案時，你除了看 .py 檔，還可以注意以下幾個「AI 核心組件」的位置：
+檔案/目錄名稱	意義
+Jenkinsfile	描述了如何把 AI 程式碼打包成 Docker 並部署。
+requirements.txt / pyproject.toml	紀錄了這支 AI 用了哪些套件（如 langchain, openai, oracledb）。
+models/ 或 weights/	有些專案會把模型權重放在這（如果很大，通常會用 LFS 連結）。
+docker-compose.yml	如果裡面有 image: redis，就代表這個 AI 專案確實在本地啟用了 Redis。
+總結
+
+如果你有 Jenkins 的權限，Workspace 是你最好的朋友。如果你在 Workspace 裡看到了 src/ 資料夾，點開它，你就能看到我們之前討論過的——那段同時操作 Redis 與 Oracle 的 API 原始碼了。
+
+你想知道如何從 Jenkins 的日誌裡，判斷這個專案最後被部署到了哪一台伺服器嗎？
