@@ -5,3 +5,23 @@ E:\20260130>pip install pandas plotly openpyxl
 E:\20260130>pip install pyinstaller
 E:\20260130>pyinstaller --onefile --windowed --collect-all tkinterdnd2 ConvertToLinePic.py
 E:\20260130>pyinstaller --onefile --windowed --collect-all tkinterdnd2 ConvertToLinePic.py
+
+C:\Windows\System32>python -m pip install pyinstaller tkinterdnd2
+C:\Windows\System32>python -m pyinstaller --onefile --windowed --collect-all tkinterdnd2 ConvertToLinePic.py
+C:\Python314\python.exe: No module named pyinstaller
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+
+'C:\\Users\\goodk\\AppData\\Roaming\\Python\\Python314\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+E:\20260130>python -m PyInstaller --onefile --windowed --collect-all tkinterdnd2 main.py
+E:\20260130>python -m createDutyjob.py
+E:\20260130>pip install pandas openpyxl
+E:\20260130>python -m createDutyjob.py
+E:\20260130>pip install python-pptx
+E:\20260130>python -m createWeeklyReport.py
+
+E:\20260130>python createWeeklyReport2.py
+✅ PPT 檔案已成功生成在當前資料夾！
