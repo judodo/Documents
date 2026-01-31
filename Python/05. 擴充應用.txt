@@ -1,0 +1,7 @@
+C:\Windows\System32>pip install opencv-python
+C:\Windows\System32>pip install tkinterdnd2
+C:\Windows\System32>pip install pyinstaller
+E:\20260130>pip install pandas plotly openpyxl
+E:\20260130>pip install pyinstaller
+E:\20260130>pyinstaller --onefile --windowed --collect-all tkinterdnd2 ConvertToLinePic.py
+E:\20260130>pyinstaller --onefile --windowed --collect-all tkinterdnd2 ConvertToLinePic.py
