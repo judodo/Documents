@@ -1,0 +1,76 @@
+當你將 Git 託管的 AI 專案與 Docker 結合時，最標準的流程就是將 「程式碼」、「依賴套件」與「模型參數」 封裝成一個映像檔（Image）。
+
+在這種架構下，Redis 和 Oracle 的連線資訊通常不會寫死在程式碼裡，而是透過 環境變數 (Environment Variables) 在 docker build 或 docker run 時注入。
+1. 核心流程圖：從 Git 到 Docker Image
+
+這個過程通常被稱為「容器化」（Containerization）。
+
+    Git Clone: 從倉庫抓取原始碼。
+
+    Docker Build: 根據 Dockerfile 指令，將環境（如 Python）、程式碼、依賴包打包。
+
+    Docker Push: 將打包好的映像檔存入公司的倉庫（Image Registry）。
+
+2. 實戰：Dockerfile 範本
+
+這是一個典型的 AI 專案 Dockerfile。它展示了如何把你的 API 邏輯（包含 Redis 和 Oracle 的驅動）打包進去：
+Dockerfile
+
+# 1. 指定基底映像檔 (通常用 Python)
+FROM python:3.9-slim
+
+# 2. 安裝 Oracle 必要的系統驅動 (Oracle Instant Client)
+RUN apt-get update && apt-get install -y libaio1 wget unzip \
+    && mkdir -p /opt/oracle
+# (這裡通常會有一段下載並解壓 Oracle client 的指令)
+
+# 3. 設定工作目錄
+WORKDIR /app
+
+# 4. 先複製依賴清單 (利用 Docker 快取機制)
+COPY requirements.txt .
+
+# 5. 安裝套件 (包含 redis, cx_Oracle 等)
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 6. 複製 Git 上的所有原始碼到映像檔中
+COPY . .
+
+# 7. 設定執行指令
+CMD ["python", "app.py"]
+
+3. 如何執行 docker build？
+
+在 Jenkins 或你的本機終端機中，切換到 Git 專案的根目錄，執行以下指令：
+Bash
+
+# -t 代表標籤 (Tag)，格式為 專案名稱:版本號
+docker build -t my-ai-service:v1.0 .
+
+這裡的 . 代表「在當前目錄尋找 Dockerfile」。
+4. 關鍵細節：處理 Redis 與 Oracle 的連線
+
+為了讓這個 Docker 映像檔能「同時」連上 Redis 和 Oracle，開發者通常會使用 Docker Compose 或在啟動時指定環境變數。
+
+啟動指令範例：
+Bash
+
+docker run -d \
+  --name ai-app \
+  -e REDIS_URL="redis://172.17.0.1:6379" \
+  -e ORACLE_URL="user/pass@172.17.0.1:1521/xe" \
+  my-ai-service:v1.0
+
+5. 如何「反追查」建置過程？
+
+如果你在 Jenkins 裡看到專案使用了 Docker，你可以觀察其 Jenkinsfile。
+    搜尋 docker.build 或 sh 'docker build ...'。
+    只要看到這行，就代表你可以透過 docker history (如前所述) 看到這個 Image 內部包含了哪些來自 Git 的檔案。
+
+💡 專業建議
+
+在 AI 開發中，模型權重檔案（如 .pth 或 .bin）通常很大。如果這些檔案也放在 Git 裡，docker build 會變得非常慢。專業做法是：
+    模型分離：將模型放在外部儲存（如 S3 或 NAS），在 Docker 啟動後再掛載（Mount）進去。
+    多階段建置 (Multi-stage Build)：減少 Image 體積，確保資安（不把編譯工具留在 Image 裡）。
+
+你想試著寫一個 docker-compose.yml 檔案，一次啟動你的 AI 程式、Redis 和 Oracle 嗎？這可以讓你一鍵架設完整的開發環境！
