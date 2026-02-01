@@ -1,3 +1,15 @@
+提示詞:
 break this paragraph down into natual spoken English Explain why native speaker say it this way.
 
+提示詞:
 把中英文對照寫出來
+
+提示詞:
+翻譯全文，整理重點詞彙
+
+# Notebook LM 整理語塊
+提示詞: 
+整理語塊(Language Chunks)在詞彙3000左右的人應該看得懂，掌握得住
+
+提示詞: 
+改成一個詞彙量儲備在2000以內的版本
