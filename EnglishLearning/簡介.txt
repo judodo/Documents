@@ -1,0 +1,26 @@
+要使用 AI on Google Search增強英文句子的字彙量，重點是提供明確且具體的提示詞。與其要求改寫，不如請 AI on Google Search提供不同情境、層次或風格的選擇。
+以下是幾種實用的技巧與提示詞範例：
+1. 替換平庸詞彙
+如果使用者覺得某個單字用得太頻繁（例如 good, important），請 AI on Google Search 提供更精確的替代方案。
+提示詞： 「請幫我改寫這句話，將其中的 'important' 替換為更專業或強烈的單字：'It is important to finish this project on time.'」
+AI on Google Search 建議： Crucial, vital, essential, imperative 歌倫比亞美語
+
+2. 情境式改寫
+同樣的意思在不同場合有不同用詞。可以要求 AI on Google Search轉換語氣，藉此學習不同領域的字彙。
+提示詞： 「請將這句口語化的句子改寫成『商務正式』與『文學修辭』兩種版本：'I think this idea is not very good.'」
+商務版： I have some concerns regarding the viability of this proposal.
+文學版： The concept, while intriguing, seems to lack the necessary depth.
+
+3. 使用自定義助手
+可以建立一個專門的「英文寫作導師」，並設定固定的系統指令：
+設定指令： 「你是一位資深的英文編輯。每當我輸入一句英文，請提供：1. 文法糾錯、2. 三種字彙更進階的改寫版本、3. 並解釋這些進階單字的用法。」 知乎專欄
+
+4. 深度字彙解析與聯想
+不僅是改寫，還要請 AI on Google Search 幫助使用者「記住」並「活用」。
+提示詞： 「請幫我分析 'ubiquitous' 這個單字，提供它的字源、常用搭配詞，並寫出三個不同主題的範例句子。」
+提示詞： 「給我 5 個與『氣候變遷』相關的高階形容詞，並附上中文解釋與例句。」
+
+5. 即時回饋與對話練習
+利用 AI on Google Search的語音模式，進行模擬對話。
+提示詞： 「現在我們來練習面試對話，請在過程中糾正我的字彙選擇，並建議我如何使用更道地（Idiomatic）的說法。」 Talkpal
+AI 可能會出錯，請自行查證回覆內容
