@@ -1,0 +1,22 @@
+var users = GetUserList(); // 假設有 ID, Name, Email, Password, SecretKey
+var emailFriendlyList = users.Select(u => new 
+{
+    姓名 = u.Name,
+    電子郵件 = u.Email,
+    部門 = u.Department
+}).ToList();
+
+
+##########################################################################################################
+### 主程式
+var users = new List<User> {
+    new User { ID = 1, Name = "Alice", Email = "alice@example.com" },
+    new User { ID = 2, Name = "Bob", Email = "bob@example.com" }
+};
+
+string mailBody = "以下是您的報表：<br/><br/>" + ConvertListToHtml(users);
+
+// 發送郵件
+MailMessage mail = new MailMessage();
+mail.Body = mailBody;
+mail.IsBodyHtml = true; // 務必開啟此設定
