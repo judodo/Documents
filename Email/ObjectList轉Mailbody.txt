@@ -1,0 +1,46 @@
+##   C# 轉換物件清單至 HTML 表格 
+using System.Text;
+using System.Reflection;
+using System.Web; // 需要引用 System.Web 以使用 HtmlEncode
+
+public string ConvertListToHtml<T>(IEnumerable<T> objectList)
+{
+    if (objectList == null) return "";
+
+    StringBuilder sb = new StringBuilder();
+    // 設定表格基本樣式
+    sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border-collapse:collapse; font-family:Arial; font-size:10pt; width:100%;'>");
+
+    // 1. 取得物件的所有屬性 (作為表頭)
+    PropertyInfo[] props = typeof(T).GetProperties();
+    
+    // 2. 建立表頭 (Thead)
+    sb.Append("<tr style='background-color: #4CAF50; color: white;'>");
+    foreach (var prop in props)
+    {
+        sb.AppendFormat("<th style='border: 1px solid #ddd; text-align: left;'>{0}</th>", prop.Name);
+    }
+    sb.Append("</tr>");
+
+    // 3. 填入每一列資料 (Rows)
+    int rowCount = 0;
+    foreach (var item in objectList)
+    {
+        // 斑馬紋效果：偶數列換背景色
+        string bgColor = (rowCount++ % 2 == 0) ? "#ffffff" : "#f9f9f9";
+        sb.AppendFormat("<tr style='background-color: {0};'>", bgColor);
+        
+        foreach (var prop in props)
+        {
+            var val = prop.GetValue(item, null);
+            string cellValue = val != null ? val.ToString() : "";
+            // 防止 XSS 並確保 HTML 格式正確
+            sb.AppendFormat("<td style='border: 1px solid #ddd;'>{0}</td>", HttpUtility.HtmlEncode(cellValue));
+        }
+        sb.Append("</tr>");
+    }
+
+    sb.Append("</table>");
+    return sb.ToString();
+}
+
