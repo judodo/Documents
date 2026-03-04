@@ -1,0 +1,149 @@
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Tool.UI.Pages
+{
+    public partial class UcExportBom : UserControl
+    {
+        public UcExportBom()
+        {
+            InitializeComponent();
+            this.BackColor = Color.LightGreen; // 設定明顯背景色
+            var label = new Label { Text = "這是【展BOM】頁面", AutoSize = true, Font = new Font("微軟正黑體", 20) };
+            this.Controls.Add(label);
+        }
+
+        private void btnBom_Click(object sender, EventArgs e)
+        {
+            // Step 1: 找工單 (得到三張工單)
+            var workOrders = new List<WorkOrder> {
+        new WorkOrder { WoNo = "WO-001", PartNo = "料號A" },
+        new WorkOrder { WoNo = "WO-002", PartNo = "料號B" },
+        new WorkOrder { WoNo = "WO-003", PartNo = "料號B" }
+    };
+
+            // Step 2: 定義 BOM 關係 (料號對應物料)
+            var boms = new List<BomItem> {
+        new BomItem { PartNo = "料號A", MaterialNo = "M1", UnitQty = 3 },
+        new BomItem { PartNo = "料號A", MaterialNo = "M2", UnitQty = 5 },
+        new BomItem { PartNo = "料號B", MaterialNo = "M1", UnitQty = 2 },
+        new BomItem { PartNo = "料號B", MaterialNo = "M3", UnitQty = 10 }
+    };
+
+            // Step 3: 定義發料單紀錄 (工單 + 物料 = 實際用量)
+            var issueRecords = new List<IssueRecord> {
+        new IssueRecord { WoNo = "WO-001", MaterialNo = "M1", ActualQty = 60 },
+        new IssueRecord { WoNo = "WO-001", MaterialNo = "M2", ActualQty = 110 },
+        new IssueRecord { WoNo = "WO-002", MaterialNo = "M1", ActualQty = 40 }
+    };
+
+            // --- 核心轉成程式邏輯 (展開與合併) ---
+
+            var finalReport = (from wo in workOrders
+                               join bom in boms on wo.PartNo equals bom.PartNo
+                               join issue in issueRecords
+                                  on new { wo.WoNo, bom.MaterialNo }
+                                  equals new { issue.WoNo, issue.MaterialNo }
+                                  into joinedIssue
+                               from subIssue in joinedIssue.DefaultIfEmpty()
+                               select new
+                               {
+                                   WoNo = wo.WoNo,
+                                   PartNo = wo.PartNo,
+                                   MaterialNo = bom.MaterialNo,
+                                   UnitQty = bom.UnitQty,
+                                   ActualQty = subIssue?.ActualQty ?? 0
+                               }).ToList();
+
+            // 最後將結果綁定到 DataGridView
+            dvWorkOrders.DataSource = finalReport.ToList();
+
+            // --- 2. 使用 NPOI 建立 Excel ---
+            IWorkbook workbook = new HSSFWorkbook();
+            ISheet sheet = workbook.CreateSheet("工單領料統計表");
+
+            // 設定表頭樣式
+            ICellStyle headerStyle = workbook.CreateCellStyle();
+            headerStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Grey25Percent.Index;
+            headerStyle.FillPattern = FillPattern.SolidForeground;
+            IFont font = workbook.CreateFont();
+            font.IsBold = true;
+            headerStyle.SetFont(font);
+
+            // 建立表頭
+            string[] headers = { "工單號碼", "成品料號", "組成物料", "單位用量", "實際領料數" };
+            IRow headerRow = sheet.CreateRow(0);
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(headers[i]);
+                cell.CellStyle = headerStyle;
+            }
+
+            // --- 3. 填入資料 ---
+            int rowIndex = 1;
+            foreach (var item in finalReport)
+            {
+                IRow row = sheet.CreateRow(rowIndex++);
+                row.CreateCell(0).SetCellValue(item.WoNo);
+                row.CreateCell(1).SetCellValue(item.PartNo);
+                row.CreateCell(2).SetCellValue(item.MaterialNo);
+                row.CreateCell(3).SetCellValue(item.UnitQty);
+                row.CreateCell(4).SetCellValue(item.ActualQty);
+            }
+
+            // 自動調整欄寬
+            for (int i = 0; i < headers.Length; i++) { sheet.AutoSizeColumn(i); }
+
+            // --- 4. 儲存檔案 ---
+            string savePath = Path.Combine(Application.StartupPath, "WIP.xls");
+            try
+            {
+                using (FileStream fs = new FileStream(savePath, FileMode.Create, FileAccess.Write))
+                {
+                    workbook.Write(fs);
+                }
+                MessageBox.Show($"WIP.xls 已成功產出！\n路徑：{savePath}", "匯出完成");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"檔案可能被開啟中或發生錯誤：{ex.Message}");
+            }
+
+        }
+
+        // 定義一個簡單的工單類別
+        // 1. 工單資訊
+        public class WorkOrder
+        {
+            public string WoNo { get; set; }        // 工單號
+            public string PartNo { get; set; }      // 料號
+        }
+
+        // 2. BOM 定義
+        public class BomItem
+        {
+            public string PartNo { get; set; }      // 所屬料號
+            public string MaterialNo { get; set; }  // 組成物料
+            public int UnitQty { get; set; }        // 每單位用料數
+        }
+
+        // 3. 實際發料紀錄
+        public class IssueRecord
+        {
+            public string WoNo { get; set; }        // 對應工單
+            public string MaterialNo { get; set; }  // 物料號
+            public int ActualQty { get; set; }      // 實際用料數
+        }
+
+    }
+}
