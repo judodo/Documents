@@ -1,0 +1,15 @@
+如果你不想引入額外的 DLL，使用 LINQ 的 .Select() 是最直觀且效能穩定的原生作法。
+C#
+
+List<B> Blist = AList.Select(a => new B 
+{
+    pkey = a.pkey,
+    name = a.name,
+    p_ID = a.p_ID,
+    c_ID = a.c_ID,
+    // ICCID 與 IMEI 會維持預設值
+}).ToList();
+
+    優點： 強型別檢查，編譯時就能發現錯誤，執行速度極快。
+
+    小技巧： 如果 A 有很多屬性，可以在 B 類別中寫一個建構函式來簡化：
