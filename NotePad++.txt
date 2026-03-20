@@ -1,0 +1,5 @@
+"D:\Program Files\Notepad++\notepad++.exe" "%1"
+
+regsvr32 /u "D:\Program Files\Notepad++\contextMenu\NppShell.dll"
+
+regsvr32 "D:\Program Files\Notepad++\contextMenu\NppShell.dll"
