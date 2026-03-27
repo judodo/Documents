@@ -1,0 +1,7 @@
+   python -c "
+   lines = open('D:/CoWIPToXML.cs',
+   encoding='utf-8').readlines()
+   print('Total lines:', len(lines))
+   print('Line 80:', repr(lines[79]))
+   print('Line 2528:', repr(lines[2527]))
+   " 2>&1
