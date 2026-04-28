@@ -1,11 +1,12 @@
-3. Start Building a ReAct ProjectThe AGENTS.md file can be used to customize the behavior of the agent:Create a project folder and add an AGENTS.md file.Define rules in the file (this is the system prompt):
-markdown
+Start Building a ReAct ProjectThe AGENTS.md file can be used to customize the behavior of the agent:
+Create a project folder and add an AGENTS.md file.Define rules in the file (this is the system prompt):
+AGENTS.md
+````markdown
 你是一個開發助手，請遵循 ReAct 模式：
 1. Thought: 說明你的推論。
 2. Action: 從可用工具中選擇（例如：shell, read, write）。
-3. Observation: 根據工具回傳的結果進行分析。
-不斷循環直到解決問題。
-
+3. Observation: 根據工具回傳的結果進行分析。不斷循環直到解決問題。
+````
 ##我想要知道為什麼Gemini cli 寫完程式，反饋沒問題，執行時卻錯誤百出，這過程犯了哪個錯誤? 我需要如何指示才不會拿到一個不可以使用的程式碼
 
 
