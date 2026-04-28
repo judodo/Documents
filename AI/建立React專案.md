@@ -15,10 +15,11 @@ markdown
 以下是常見錯誤分析以及如何下達指令的解決方案：
 
 # 1. 過程中的核心錯誤
-## 沒有執行驗證 (Dry Run only)： AI 寫完程式後，直接假設它會動，沒有執行「運行」或「測試」指令來獲取 Observation。
-## 環境不匹配： AI 假設你已經安裝了某些函式庫（如 requests, pandas），但你的本機環境其實沒有。
-## 路徑問題： AI 寫入檔案的路徑與它執行時的路徑不一致。
-## 缺少錯誤處理： AI 產出的範例通常是「快樂路徑 (Happy Path)」，沒有考慮到網路斷線、檔案不存在等異常情況。
+
+* 沒有執行驗證 (Dry Run only)： AI 寫完程式後，直接假設它會動，沒有執行「運行」或「測試」指令來獲取 Observation。
+* 環境不匹配： AI 假設你已經安裝了某些函式庫（如 requests, pandas），但你的本機環境其實沒有。
+* 路徑問題： AI 寫入檔案的路徑與它執行時的路徑不一致。
+* 缺少錯誤處理： AI 產出的範例通常是「快樂路徑 (Happy Path)」，沒有考慮到網路斷線、檔案不存在等異常情況。
 
 # 2. 如何指示才能拿到可用的程式碼？
 若要 AI 產出可執行的程式，需要在指示中加入 「強制閉環」 與 「環境檢查」 的指令。建議使用以下結構：
@@ -54,6 +55,18 @@ markdown
 這樣 AI 才會學會利用 Observation 來修正錯誤。
 
 
+```markdown
+### 這裡面的內容會被標色
+- [x] 完成事項
+- [ ] 待辦事項
+```
+
+```markdown
+# 這是一個 Markdown 範本標題
+*   清單項目一
+*   清單項目二
+
+```
 
 請謹慎使用程式碼。Perform tasks: Execute gemini "開發一個能抓取天氣的 Python 腳本" 
 (which translates to "Develop a Python script that can fetch the weather") in the directory. 
